@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/ZTRdiamond/baileys-shard#readme",
   "dependencies": {
-    "baileys": "6.7.20",
+    "baileys": "6.7.21",
     "events": "3.3.0",
     "glob": "11.0.3",
     "path": "0.12.7",
