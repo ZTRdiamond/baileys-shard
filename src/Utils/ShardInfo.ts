@@ -1,4 +1,4 @@
-import { ShardInfoConstructorParams, ShardInfoUpdateFields } from "../Types/index";
+import { IShardInfoConstructorParams, IShardInfoUpdateFields } from "../Types/index";
 
 export default class ShardInfo {
   public id: string | number;
@@ -14,7 +14,7 @@ export default class ShardInfo {
     total, 
     phoneNumber = null, 
     status = "initializing" 
-  }: ShardInfoConstructorParams) {
+  }: IShardInfoConstructorParams) {
     this.id = id;
     this.index = index;
     this.total = total;
@@ -23,7 +23,7 @@ export default class ShardInfo {
     this.updatedAt = new Date();
   }
 
-  update(fields: ShardInfoUpdateFields = {}): void {
+  update(fields: IShardInfoUpdateFields = {}): void {
     Object.assign(this, fields);
     this.updatedAt = new Date();
   }

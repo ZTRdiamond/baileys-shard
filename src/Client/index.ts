@@ -7,10 +7,11 @@ import * as glob from "glob";
 import fs from "fs";
 
 import {
-  ShardOptions,
-  ShardConfig,
-  ShardInfoUpdateFields,
-  ConnectionUpdate,
+  IShardOptions,
+  IShardConfig,
+  ISocketConfig,
+  IShardInfoUpdateFields,
+  IConnectionUpdate,
 } from "../Types/index";
 
 import ShardInfo from "../Utils/ShardInfo";
@@ -52,10 +53,12 @@ export default class ShardManager extends EventEmitter {
   #sessionDirectory: string = "./sessions";
   #shards: Map<string, any> = new Map();
   #shardsInfo: Map<string, ShardInfo> = new Map();
+  #SocketConfig: ISocketConfig = {}
   private _patched?: boolean;
 
-  constructor(config: ShardConfig = {}) {
+  constructor(config: IShardConfig = {}) {
     super();
+    this.#SocketConfig  = config?.socketConfig;
     this.#sessionDirectory = config?.session || this.#sessionDirectory;
     this.cleanupCorruptSessions().catch(err => {
       logger.error(`Failed to cleanup sessions on startup: ${err}`);
@@ -149,7 +152,7 @@ export default class ShardManager extends EventEmitter {
     }
   }
 
-  private setupShardEventHandlers(sock: any, id: string, saveCreds: any, options: ShardOptions) {
+  private setupShardEventHandlers(sock: any, id: string, saveCreds: any, options: IShardOptions) {
     this.#shards.set(id, sock);
     this.#shardsInfo.set(
       id,
@@ -276,7 +279,7 @@ export default class ShardManager extends EventEmitter {
     }
   }
 
-  async createShard(options: ShardOptions = {}): Promise<{ id: string; sock: any }> {
+  async createShard(options: IShardOptions = {}): Promise<{ id: string; sock: any }> {
     try {
       const baileys = await import("baileys");
       const { default: makeWASocket, useMultiFileAuthState } = baileys;
@@ -509,11 +512,11 @@ export default class ShardManager extends EventEmitter {
     this._patched = true;
   }
 
-  getShardInfo(id: string): ShardInfo | null {
+  getShardInfo(id: string): IShardInfo | null {
     return this.#shardsInfo.get(id) || null;
   }
 
-  getAllShardInfo(): ShardInfo[] {
+  getAllShardInfo(): IShardInfo[] {
     return Array.from(this.#shardsInfo.values());
   }
 }
