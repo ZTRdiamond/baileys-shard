@@ -325,6 +325,7 @@ export default class ShardManager extends EventEmitter {
         auth: state,
         printQRInTerminal: !options?.phoneNumber,
         logger,
+        ...this.#SocketConfig,
         ...options?.socket,
       });
   
@@ -371,7 +372,7 @@ export default class ShardManager extends EventEmitter {
             this.#shardsInfo.delete(id);
           }
           await new Promise((r) => setTimeout(r, 2000));
-          return await this.createShard({ id, ...restOptions });
+          return await this.createShard({ id, socket: this.#SocketConfig, ...restOptions });
         }
       }
   
@@ -398,7 +399,7 @@ export default class ShardManager extends EventEmitter {
   
       await new Promise((r) => setTimeout(r, 2000));
   
-      return await this.createShard({ id, ...restOptions });
+      return await this.createShard({ id, socket: this.#SocketConfig, ...restOptions });
     } catch (err: any) {
       if (retryCount < maxRetries) {
         logger.warn(`Retrying recreate shard ${id} (attempt ${retryCount + 1}/${maxRetries})`);
